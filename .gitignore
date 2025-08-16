@@ -113,3 +113,4 @@ SETUP_GUIDE.md
 
 # Prisma
 prisma/migrations/dev.db*
+.vercel

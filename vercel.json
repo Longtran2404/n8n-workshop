@@ -4,21 +4,7 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["hnd1"],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "AUTH_SECRET": "@auth_secret",
-    "NEXTAUTH_SECRET": "@nextauth_secret",
-    "NEXTAUTH_URL": "@nextauth_url",
-    "GOOGLE_CLIENT_ID": "@google_client_id",
-    "GOOGLE_CLIENT_SECRET": "@google_client_secret",
-    "FACEBOOK_CLIENT_ID": "@facebook_client_id",
-    "FACEBOOK_CLIENT_SECRET": "@facebook_client_secret",
-    "R2_ENDPOINT": "@r2_endpoint",
-    "R2_ACCESS_KEY_ID": "@r2_access_key_id",
-    "R2_SECRET_ACCESS_KEY": "@r2_secret_access_key",
-    "R2_BUCKET": "@r2_bucket",
-    "R2_PUBLIC_BASE_URL": "@r2_public_base_url"
-  },
+  "env": {},
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 30
