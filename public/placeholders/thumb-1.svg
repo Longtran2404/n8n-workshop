@@ -1,0 +1,14 @@
+<!-- SVG Placeholder for thumb-1.jpg -->
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="thumb1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8edea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fed6e3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="200" fill="url(#thumb1)"/>
+  <text x="150" y="90" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#2D3748" text-anchor="middle">Workflow Template</text>
+  <text x="150" y="115" font-family="Arial, sans-serif" font-size="12" fill="#4A5568" text-anchor="middle">#1 Professional</text>
+  <circle cx="150" cy="140" r="15" fill="#48BB78" opacity="0.8"/>
+  <text x="150" y="145" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle" font-weight="bold">✓</text>
+</svg>

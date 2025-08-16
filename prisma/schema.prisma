@@ -1,0 +1,137 @@
+// Prisma schema for Auth.js/NextAuth v5 and workflow platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String?  @unique
+  emailVerified DateTime?
+  image         String?
+  role          String   @default("user") // Add role field for admin management
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  accounts      Account[]
+  sessions      Session[]
+  workflows     Workflow[] @relation("UserWorkflows")
+  purchases     WorkflowPurchase[]
+  reviews       WorkflowReview[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+model Workflow {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  content     Json
+  thumbnail   String?
+  folderPath  String?  // S3 folder path for workflow files
+  authorId    String?
+  author      User?    @relation("UserWorkflows", fields: [authorId], references: [id])
+  platform    String   @default("n8n")
+  category    String?
+  tags        String[]
+  difficulty  String   @default("beginner")
+  price       Decimal  @default(0) @db.Decimal(10,2)
+  isPaid      Boolean  @default(false)
+  isPublished Boolean  @default(true)
+  views       Int      @default(0)
+  downloads   Int      @default(0)
+  rating      Decimal  @default(0) @db.Decimal(3,2)
+  ratingCount Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  files       WorkflowFile[]
+  purchases   WorkflowPurchase[]
+  reviews     WorkflowReview[]
+}
+
+model WorkflowFile {
+  id          String   @id @default(cuid())
+  workflowId  String
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  fileName    String
+  fileUrl     String
+  fileType    String
+  fileSize    Int
+  bucketName  String?  // S3 bucket name
+  s3Key       String?  // S3 object key
+  contentType String?
+  createdAt   DateTime @default(now())
+}
+
+model WorkflowPurchase {
+  id                   String   @id @default(cuid())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflowId           String
+  workflow             Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  amount               Decimal  @db.Decimal(10,2)
+  currency             String   @default("USD")
+  status               String   @default("completed")
+  stripePaymentIntentId String?
+  createdAt            DateTime @default(now())
+  
+  @@unique([userId, workflowId])
+}
+
+model WorkflowReview {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  rating     Int      @map("rating")
+  comment    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  @@unique([userId, workflowId])
+}
